@@ -3,12 +3,47 @@ from typing import Any
 from collections import deque
 
 class LL:
-    def __init__(self, value, next=None):
+    def __init__(self, value, next=None) -> None:
         if not isinstance(next, LL) and next != None:
             raise TypeError(f"next has to point towards another node of type <Linked_list>.")
 
         self.value = value
         self.next = next
+    
+    def insert_at_index(self, index:int, value) -> bool:
+        current = self
+        while index > 0:
+            if current.next == None:
+                return False
+            current = current.next    
+            index -= 1
+        if current.next == None:
+            current.next = LL(value)
+        else:
+            current.next = LL(value, current.next)
+        return True
+    
+    def insert(self, value) -> None:
+        current = self
+        while current.next != None:
+            current = current.next
+
+        current.next = LL(value)
+
+    
+    
+    def __repr__(self) -> str:
+        current = self
+        LL_str = ""
+
+        while (current.next != None):
+            LL_str += f"{self.value} -> "
+            current = current.next
+        LL_str += f"{current.value}"
+        return LL_str
+
+        
+
     
 class DLL:
     def __init__(self, value, next=None, back=None):
@@ -20,6 +55,35 @@ class DLL:
         self.value = value
         self.next = next
         self.back = back
+    
+    def insert_at_index(self, index:int, value) -> bool:
+        while index > 0:
+            if self.next == None:
+                return False
+            self = self.next    
+            index -= 1
+        if self.next == None:
+            self.next = DLL(value, back=self)
+        else:
+            
+            self.next = DLL(value, self.next, back=self)
+            self.next.next.back = self.next
+        return True
+    
+    def insert(self, value) -> None:
+        while self.next != None:
+            self = self.next
+
+        self.next = DLL(value, back=self)
+
+    def __repr__(self) -> str:
+        LL_str = ""
+        while (self.next != None):
+            LL_str += f"{self.value} -> "
+            self = self.next
+        LL_str += f"{self.value}"
+        return LL_str
+
 
 class circular_buffer:
     def __init__(self, data:list, BUFFER_SIZE:int):
@@ -182,18 +246,18 @@ class tree:
                 self.right.insert(value)
     
     def search(self, value) -> tree:
-        while (True):
-            if self.value == value:
-                return self
+        current = self
+        while (current):
+            if current.value == value:
+                return current
             
-            if self.value > value:
-                if self.left == None:
+            if current.value > value:
+                if current.left == None:
                     return None
-                self = self.left 
+                current = current.left 
             
-            if self.value < value:
-                if self.right == None:
+            if current.value < value:
+                if current.right == None:
                     return None
-                self = self.right 
-            
+                current = current.right 
 
